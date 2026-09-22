@@ -8,12 +8,17 @@ from src.utils.logger import get_logger
 logger = get_logger("run_app")
 
 def main():
+    host = os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", "8000"))
+    
     logger.info("==================================================")
     logger.info("STARTING RETAILMIND-X AI COMMAND CENTER WEB SERVER")
     logger.info("==================================================")
-    logger.info("Server listening at: http://127.0.0.1:8000")
+    logger.info(f"Server listening at: http://{host}:{port}")
     
-    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
+    is_dev = os.environ.get("ENVIRONMENT", "development").lower() != "production"
+    uvicorn.run("app.main:app", host=host, port=port, reload=is_dev)
 
 if __name__ == "__main__":
     main()
+

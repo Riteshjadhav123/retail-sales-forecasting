@@ -32,4 +32,8 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
+    host = os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", "8000"))
+    is_dev = os.environ.get("ENVIRONMENT", "development").lower() != "production"
+    uvicorn.run("app.main:app", host=host, port=port, reload=is_dev)
+
