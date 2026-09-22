@@ -25,12 +25,15 @@
       </div>
 
       <nav class="sidebar-nav" id="main-nav-bar">
+        <div class="nav-section-title">OVERVIEW</div>
         <button class="nav-item active" data-tab="page-executive-dashboard">
-          <span class="nav-icon">🏠</span> <span>Dashboard</span>
+          <span class="nav-icon">🏠</span> <span>Executive Dashboard</span>
         </button>
         <button class="nav-item nav-post-only" data-tab="page-data-health" style="display:none;">
-          <span class="nav-icon">📂</span> <span>Data Health</span>
+          <span class="nav-icon">📂</span> <span>Data Health & Quality</span>
         </button>
+
+        <div class="nav-section-title nav-post-only" style="display:none;">INTELLIGENCE</div>
         <button class="nav-item nav-post-only" data-tab="page-sales-analytics" style="display:none;">
           <span class="nav-icon">📈</span> <span>Sales Analytics</span>
         </button>
@@ -38,19 +41,23 @@
           <span class="nav-icon">🔮</span> <span>Forecast Center</span>
         </button>
         <button class="nav-item nav-post-only" data-tab="page-inventory-intelligence" style="display:none;">
-          <span class="nav-icon">📦</span> <span>Inventory Intelligence</span>
+          <span class="nav-icon">📦</span> <span>Inventory & Reorders</span>
         </button>
+
+        <div class="nav-section-title nav-post-only" style="display:none;">SIMULATION & AI</div>
         <button class="nav-item nav-post-only" data-tab="page-whatif-simulator" style="display:none;">
-          <span class="nav-icon">🧪</span> <span>Scenario Lab</span>
+          <span class="nav-icon">🧪</span> <span>Scenario Simulator</span>
         </button>
         <button class="nav-item nav-post-only" data-tab="page-model-explainability" style="display:none;">
-          <span class="nav-icon">🧠</span> <span>Explainability</span>
+          <span class="nav-icon">🧠</span> <span>AI Explainability</span>
         </button>
         <button class="nav-item nav-post-only" data-tab="page-project-insights" style="display:none;">
           <span class="nav-icon">💡</span> <span>Business Insights</span>
         </button>
+
+        <div class="nav-section-title">OUTPUT & HELP</div>
         <button class="nav-item nav-post-only" data-tab="page-reports-export" style="display:none;">
-          <span class="nav-icon">📄</span> <span>Reports</span>
+          <span class="nav-icon">📄</span> <span>Reports & Downloads</span>
         </button>
         <button class="nav-item" data-tab="view-help">
           <span class="nav-icon">❓</span> <span>Help & Docs</span>
@@ -94,8 +101,6 @@
           <button id="btn-reset-session" class="btn-header-upload" style="display:none;">
             🔄 <span>Change Dataset</span>
           </button>
-
-          <span style="font-size:0.85rem; color:var(--text-subtle); font-weight:600;">👤 Enterprise</span>
         </div>
       </header>
 
@@ -180,22 +185,52 @@
 
           <!-- NO DATASET STATE ONBOARDING -->
           <div id="dashboard-no-dataset-view" class="onboarding-center-card">
-            <h1 style="font-size:2rem; color:var(--accent-cyan); margin-bottom:0.5rem; letter-spacing:0.05em;">RetailMind-X</h1>
-            <h2 style="font-size:1.1rem; color:var(--text-main); font-weight:500; margin-bottom:1rem;">
-              Turn Retail Data Into Actionable Intelligence
-            </h2>
-            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:2rem; line-height:1.6;">
-              Upload your sales dataset to begin demand forecasting, inventory risk detection, and automated reporting.
+            <div class="brand-hero-badge">AI RETAIL INTELLIGENCE</div>
+            <h1 style="font-size:2.2rem; color:var(--text-main); margin:0.75rem 0 0.5rem 0; font-weight:800; letter-spacing:-0.02em;">
+              RetailMind<span style="color:var(--accent-cyan);">-X</span>
+            </h1>
+            <p style="font-size:1rem; color:var(--text-muted); max-width:620px; margin:0 auto 2rem auto; line-height:1.6;">
+              Data-first demand forecasting, safety stock optimization, and autonomous inventory replenishment intelligence.
             </p>
+
+            <!-- 1-Click Instant Demo Datasets -->
+            <div class="sample-demo-card">
+              <div class="sample-demo-header">
+                <span class="pulse-dot"></span>
+                <span>EXPLORE INSTANT DEMO (ONE-CLICK)</span>
+              </div>
+              <div class="sample-demo-buttons">
+                <button type="button" class="btn-sample-demo" onclick="loadSampleDataset('sample_retail_sales_dataset.csv')">
+                  <span class="sample-icon">📊</span>
+                  <div class="sample-info">
+                    <div class="sample-name">Retail Sales POS Sample</div>
+                    <div class="sample-sub">5,000 Transactions • 90.4% Accuracy</div>
+                  </div>
+                  <span class="sample-arrow">→</span>
+                </button>
+                <button type="button" class="btn-sample-demo" onclick="loadSampleDataset('superstore.csv')">
+                  <span class="sample-icon">🛒</span>
+                  <div class="sample-info">
+                    <div class="sample-name">Global Superstore Retail</div>
+                    <div class="sample-sub">Multi-Category SKUs • Reorders & Risks</div>
+                  </div>
+                  <span class="sample-arrow">→</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="or-divider">
+              <span>OR UPLOAD YOUR OWN DATASET</span>
+            </div>
 
             <div class="onboarding-dropzone" id="dropzone-area">
               <div id="dropzone-idle-content">
-                <div style="font-size:2.8rem; margin-bottom:0.75rem;">📁</div>
-                <h3 style="font-size:1.1rem; color:var(--text-main); margin-bottom:0.4rem;">Drag & drop your retail dataset here</h3>
-                <p style="font-size:0.82rem; color:var(--text-subtle); margin-bottom:1.5rem;">Supported formats: <strong>CSV • PARQUET • EXCEL</strong> (Up to 100 MB)</p>
+                <div class="dropzone-icon-circle">📂</div>
+                <h3 style="font-size:1.15rem; color:var(--text-main); margin-bottom:0.4rem; font-weight:700;">Drag & drop your sales dataset here</h3>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.5rem;">Accepts <strong>CSV, EXCEL (.xlsx), PARQUET</strong> up to 100 MB</p>
                 <input type="file" id="hero-file-input" accept=".csv, .parquet, .xlsx, .xls" style="display:none;" />
-                <button type="button" id="btn-hero-browse" class="btn-header-upload" style="margin:0 auto; padding:0.75rem 2rem; font-size:0.95rem;">
-                  [ UPLOAD DATASET ]
+                <button type="button" id="btn-hero-browse" class="btn-header-upload" style="margin:0 auto; padding:0.8rem 2.2rem; font-size:0.95rem; font-weight:600;">
+                  Browse Files
                 </button>
               </div>
               <!-- Real-Time Upload Progress Container -->
@@ -203,12 +238,12 @@
             </div>
 
             <div class="checklist-grid">
-              <div class="checklist-item"><strong>✓</strong> Automatic profiling</div>
-              <div class="checklist-item"><strong>✓</strong> AI demand forecasting</div>
-              <div class="checklist-item"><strong>✓</strong> Inventory optimization</div>
-              <div class="checklist-item"><strong>✓</strong> Risk matrix detection</div>
-              <div class="checklist-item"><strong>✓</strong> Business insights</div>
-              <div class="checklist-item"><strong>✓</strong> Master export reports</div>
+              <div class="checklist-item"><span class="check-icon">✓</span> Automatic Schema Profiling</div>
+              <div class="checklist-item"><span class="check-icon">✓</span> LightGBM Quantile Forecasts</div>
+              <div class="checklist-item"><span class="check-icon">✓</span> Reorder Point & Safety Stock</div>
+              <div class="checklist-item"><span class="check-icon">✓</span> 2D Risk Matrix & ABC Pareto</div>
+              <div class="checklist-item"><span class="check-icon">✓</span> What-If Scenario Twin</div>
+              <div class="checklist-item"><span class="check-icon">✓</span> 1-Click Master Reports</div>
             </div>
           </div>
 
@@ -218,57 +253,17 @@
             <!-- Hero Glance Bar -->
             <div class="hero-dashboard-bar">
               <div>
-                <div class="hero-title-text">Retail Intelligence Command Center</div>
-                <div class="hero-subtitle-text">Monitor sales velocity, forecast accuracy, and inventory stockout risk in real-time.</div>
+                <div class="hero-title-text">Executive Retail Intelligence Center</div>
+                <div class="hero-subtitle-text">Real-time demand velocity, uncertainty intervals, and proactive stockout mitigation.</div>
               </div>
               <div class="hero-meta-badges">
-                <div class="meta-badge">Dataset: <strong id="hero-dataset-name">superstore.csv</strong></div>
-                <div class="meta-badge">Records: <strong id="hero-dataset-rows">0</strong></div>
-                <div class="meta-badge">Model: <strong id="hero-model-name">LightGBM Quantile</strong></div>
+                <div class="meta-badge"><span class="meta-badge-label">Dataset:</span> <strong id="hero-dataset-name">superstore.csv</strong></div>
+                <div class="meta-badge"><span class="meta-badge-label">Records:</span> <strong id="hero-dataset-rows">0</strong></div>
+                <div class="meta-badge"><span class="meta-badge-label">Engine:</span> <strong id="hero-model-name">LightGBM Quantile</strong></div>
               </div>
             </div>
 
-            <!-- CAPABILITY MATRIX STRIP -->
-            <div class="capability-strip" id="capability-matrix-strip">
-              <span class="capability-title">ACTIVE CAPABILITIES:</span>
-              <span class="cap-pill" id="cap-forecasting">🔮 Forecasting</span>
-              <span class="cap-pill" id="cap-inventory">📦 Inventory ROP</span>
-              <span class="cap-pill" id="cap-seasonality">📅 Seasonality</span>
-              <span class="cap-pill" id="cap-anomalies">⚡ Anomalies</span>
-              <span class="cap-pill" id="cap-promo">🏷️ Promo Lift</span>
-              <span class="cap-pill" id="cap-price">💲 Price Elasticity</span>
-              <span class="cap-pill active" id="cap-drift">📉 Drift Monitoring</span>
-            </div>
-
-            <!-- AI DECISION CENTER (TODAY'S PRIORITIES & TOP ACTIONS) -->
-            <div class="card decision-center-card" id="ai-decision-center">
-              <div class="card-title-header">
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                  <span style="font-size:1.15rem;">🧠</span>
-                  <span style="font-size:0.95rem; font-weight:800; color:var(--text-main); letter-spacing:0.04em;">AI DECISION CENTER — TODAY'S OPERATIONAL PRIORITIES</span>
-                </div>
-                <span class="badge-status INFO" style="font-size:0.75rem;">100% Grounded Session Recommendations</span>
-              </div>
-              <p style="font-size:0.82rem; color:var(--text-muted); margin:0.25rem 0 0.75rem 0;">
-                Actionable supply-chain recommendations synthesized across forecast volatility, buffer exhaustion, and empirical demand shocks.
-              </p>
-              
-              <!-- Priority Count Pills -->
-              <div class="prio-counts-row" id="decision-prio-row">
-                <div class="prio-badge critical">🔴 <strong id="prio-cnt-critical">0</strong> Critical Stockouts</div>
-                <div class="prio-badge warning">⚠️ <strong id="prio-cnt-reorders">0</strong> Reorders Needed</div>
-                <div class="prio-badge info">⚡ <strong id="prio-cnt-anomalies">0</strong> Demand Anomalies</div>
-                <div class="prio-badge warning">📦 <strong id="prio-cnt-overstock">0</strong> Overstock Items</div>
-                <div class="prio-badge success">✅ <strong id="prio-cnt-healthy">0</strong> Healthy SKUs</div>
-              </div>
-
-              <!-- Top Action Recommendations Grid -->
-              <div class="decision-actions-grid" id="decision-actions-container">
-                <div style="padding:1rem; color:var(--text-subtle); font-size:0.85rem;">Synthesizing today's priorities...</div>
-              </div>
-            </div>
-
-            <!-- ROW 1: 6 KPI CARDS -->
+            <!-- ROW 1: 6 EXECUTIVE KPI CARDS (Placed directly at top for glanceability) -->
             <div class="grid-6-kpi">
               <div class="metric-card-enterprise">
                 <div class="metric-card-header">
@@ -285,7 +280,7 @@
                   <span class="metric-card-icon">🎯</span>
                 </div>
                 <div class="metric-card-value" id="kpi-accuracy" style="color:var(--success-green);">90.4%</div>
-                <div class="metric-card-subtext">Vaidsys Target: <strong>≥90.0%</strong></div>
+                <div class="metric-card-subtext">Target: <strong>≥90.0%</strong></div>
                 <div class="metric-target-progress">
                   <div class="metric-target-fill" id="kpi-accuracy-bar" style="width: 90%;"></div>
                 </div>
@@ -332,10 +327,10 @@
             <div class="grid-3-split">
               <div class="card">
                 <div class="card-title-header">
-                  <span>Historical Sales & Out-of-Sample Demand Forecast</span>
+                  <span>Historical Sales & Demand Forecast</span>
                   <div style="display:flex; gap:0.5rem;">
-                    <button class="mode-btn active">30D</button>
-                    <button class="mode-btn">90D</button>
+                    <button class="mode-btn active" id="btn-trend-30d" onclick="setDashboardTrendHorizon(30)">30D</button>
+                    <button class="mode-btn" id="btn-trend-90d" onclick="setDashboardTrendHorizon(90)">90D</button>
                   </div>
                 </div>
                 <div id="dashboard-trend-chart" style="height:320px;"></div>
@@ -344,12 +339,43 @@
               <div class="card">
                 <div class="card-title-header">
                   <span>Top Products by Revenue</span>
+                  <span class="badge-status INFO" style="font-size:0.75rem;">Ranked</span>
                 </div>
                 <div id="dashboard-top-products-container" style="height:320px; overflow-y:auto;"></div>
               </div>
             </div>
 
-            <!-- ROW 3: ALERTS + ABC + RISK MATRIX -->
+            <!-- ROW 3: AI DECISION CENTER (TODAY'S OPERATIONAL PRIORITIES) -->
+            <div class="card decision-center-card" id="ai-decision-center">
+              <div class="card-title-header">
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                  <span style="font-size:1.2rem;">🧠</span>
+                  <span style="font-size:0.95rem; font-weight:800; color:var(--text-main); letter-spacing:0.03em;">AI DECISION CENTER — TODAY'S OPERATIONAL PRIORITIES</span>
+                </div>
+                <div style="display:flex; gap:0.5rem; align-items:center;">
+                  <span class="badge-status INFO" style="font-size:0.75rem;">Grounded Recommendations</span>
+                </div>
+              </div>
+              <p style="font-size:0.82rem; color:var(--text-muted); margin:0.25rem 0 0.85rem 0;">
+                Actionable supply-chain recommendations synthesized across forecast volatility, buffer exhaustion, and demand shocks.
+              </p>
+              
+              <!-- Priority Count Pills -->
+              <div class="prio-counts-row" id="decision-prio-row">
+                <div class="prio-badge critical" onclick="filterDecisionActions('CRITICAL')">🔴 <strong id="prio-cnt-critical">0</strong> Critical Stockouts</div>
+                <div class="prio-badge warning" onclick="filterDecisionActions('HIGH')">⚠️ <strong id="prio-cnt-reorders">0</strong> Reorders Needed</div>
+                <div class="prio-badge info" onclick="filterDecisionActions('ANOMALY')">⚡ <strong id="prio-cnt-anomalies">0</strong> Demand Anomalies</div>
+                <div class="prio-badge warning" onclick="filterDecisionActions('MEDIUM')">📦 <strong id="prio-cnt-overstock">0</strong> Overstock Items</div>
+                <div class="prio-badge success" onclick="filterDecisionActions('ALL')">✅ <strong id="prio-cnt-healthy">0</strong> Healthy SKUs</div>
+              </div>
+
+              <!-- Top Action Recommendations Grid -->
+              <div class="decision-actions-grid" id="decision-actions-container">
+                <div style="padding:1rem; color:var(--text-subtle); font-size:0.85rem;">Synthesizing today's priorities...</div>
+              </div>
+            </div>
+
+            <!-- ROW 4: ALERTS + ABC + RISK MATRIX -->
             <div class="grid-3-equal">
               <div class="card">
                 <div class="card-title-header">
@@ -374,7 +400,7 @@
               </div>
             </div>
 
-            <!-- ROW 4: INSIGHTS & ACTIONS -->
+            <!-- ROW 5: INSIGHTS & ACTIONS -->
             <div class="card">
               <div class="card-title-header">
                 <span>Empirical Business Insights & Action Recommendations</span>

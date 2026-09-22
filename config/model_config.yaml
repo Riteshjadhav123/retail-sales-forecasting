@@ -1,0 +1,47 @@
+# RetailMind-X Forecasting Models Configuration
+# Vaidsys Technologies Data Science Project 1
+
+forecasting:
+  horizons: [7, 14, 30]
+  quantiles: [0.10, 0.50, 0.90]
+  random_state: 42
+  
+  validation_split:
+    train_ratio: 0.80
+    val_ratio: 0.10
+    test_ratio: 0.10
+
+  models:
+    naive:
+      strategy: "last_value"
+      seasonal_period: 7
+
+    moving_average:
+      windows: [7, 14, 30]
+
+    lightgbm:
+      boosting_type: "gbdt"
+      objective: "regression"
+      metric: "rmse"
+      n_estimators: 300
+      learning_rate: 0.05
+      num_leaves: 31
+      random_state: 42
+      verbose: -1
+
+    xgboost:
+      n_estimators: 200
+      learning_rate: 0.05
+      max_depth: 6
+      random_state: 42
+      verbosity: 0
+
+    tobit:
+      censoring_threshold: 0.0
+      distribution: "normal"
+
+features:
+  lags: [1, 2, 3, 7, 14, 21, 28, 30]
+  rolling_windows: [7, 14, 30, 60]
+  rolling_metrics: ["mean", "std", "min", "max"]
+  calendar: ["dayofweek", "month", "quarter", "is_weekend", "dayofyear"]

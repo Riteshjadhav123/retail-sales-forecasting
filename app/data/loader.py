@@ -1,8 +1,13 @@
+"""
+RetailMind-X Data Loader Module
+Handles downloading raw datasets and loading raw / processed CSV and Parquet files.
+"""
+
 import os
 import pandas as pd
 import urllib.request
 from typing import Optional
-from src.utils.logger import get_logger
+from app.core.logging import get_logger
 
 logger = get_logger("data_loader")
 
@@ -47,3 +52,11 @@ def load_raw_dataset(path: Optional[str] = None) -> pd.DataFrame:
         logger.warning(f"Raw dataset is missing some expected columns: {missing_cols}")
 
     return df
+
+def load_processed_data(path: str) -> pd.DataFrame:
+    """Loads processed CSV or Parquet dataset."""
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Processed data file '{path}' not found.")
+    if path.endswith(".parquet"):
+        return pd.read_parquet(path)
+    return pd.read_csv(path)

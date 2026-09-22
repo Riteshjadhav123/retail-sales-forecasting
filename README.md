@@ -1,106 +1,196 @@
-# Vaidsys Technologies Data Science Project 1: Retail Sales Forecasting
+# RetailMind-X — Retail Sales Forecasting & Inventory Intelligence Platform
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
-[![Tests](https://img.shields.io/badge/tests-36%2F36%20passed-success.svg)]()
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)]()
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com)
+[![Pytest Suite](https://img.shields.io/badge/pytest-61%20passed-success.svg)]()
+[![Hardening](https://img.shields.io/badge/hardening-9%2F9%20passed-brightgreen.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Official Project Mission:** Build an end-to-end time-series retail sales forecasting and inventory decision platform to accurately forecast demand, reduce stockouts by 15%, reduce overstock situations by 10%, and provide actionable inventory optimization insights.
+> **Vaidsys Technologies — Data Science Internship**  
+> **Project 1:** Retail Sales Forecasting & Inventory Intelligence  
+> **Architecture:** Modern Data-First, Session-Isolated Full-Stack Intelligence Platform
 
 ---
 
-## 📂 Project Architecture & Directory Structure
+## 📌 Project Overview
+
+RetailMind-X is an enterprise-grade time-series forecasting and inventory optimization platform engineered for retail operations. Designed around a strict **Data-First architecture**, the platform contains zero hardcoded datasets. It initializes in a clean `NO_DATASET` state, automatically profiles any uploaded retail transaction dataset, constructs leak-free temporal features, trains competitive baseline and machine learning forecasting models (Ridge, Random Forest, LightGBM Quantile Regressors), and generates actionable inventory optimization strategies (Safety Stock, Reorder Point, EOQ, ABC stratification, and stockout/overstock mitigation).
+
+### Key Objectives & Achievements
+- **Adaptive Ingestion:** Automatic semantic column mapping (Order Date, Sales/Revenue, Quantity, SKU/Category).
+- **Leak-Free Forecasting:** Strict chronological time-series splitting with expanding-window rolling and lag feature engineering.
+- **Probabilistic Horizons:** Forecasts across 7, 14, and 30-day horizons with P10/P50/P90 prediction intervals.
+- **Inventory Optimization:** Multi-echelon inventory control targeting **>=15% stockout reduction** and **>=10% overstock reduction**.
+- **Interactive Command Center:** Real-time web UI dashboard with live upload progress, scenario simulator, executive reporting, and conversational AI assistant.
+
+---
+
+## 📂 Repository Structure
 
 ```
-retail-sales-forecasting/
+vaidysis/
+├── app/                      # Canonical Application Core
+│   ├── api/                  # FastAPI routers and route handlers
+│   ├── core/                 # App configuration, logging, exceptions
+│   ├── data/                 # Dynamic dataset profiler, cleaner, session manager
+│   ├── features/             # Zero-lookahead time-series feature engineering
+│   ├── forecasting/          # Forecasting models, temporal validator, model registry
+│   ├── intelligence/         # Anomaly detection, seasonality, pricing & AI decision center
+│   ├── inventory/            # Safety Stock, ROP, EOQ, ABC analysis, risk matrix
+│   ├── reports/              # 30-section audit & executive report generators
+│   ├── static/               # Frontend CSS, JavaScript, and assets
+│   ├── templates/            # Single-page Command Center interface
+│   └── main.py               # FastAPI application entrypoint
+├── src/                      # Clean Compatibility Facades (pointing to app/*)
+├── api/                      # Route Compatibility Layer (api.routes)
+├── config/                   # System, inventory, and model YAML configurations
 ├── data/
-│   ├── raw/                      # Raw sales dataset (superstore.csv)
-│   └── processed/                # Clean & feature-engineered Parquet datasets
-├── notebooks/                    # Research and exploratory notebooks
-├── src/
-│   ├── data_processing/          # Loader, data quality auditor, and cleaner
-│   ├── feature_engineering/      # 53 zero-lookahead lag, rolling & trend features
-│   ├── forecasting/              # Baselines, ML models, multi-horizon & error analysis
-│   ├── evaluation/               # Metrics (MAE, RMSE, WAPE, MAPE, R2) & temporal validator
-│   └── inventory/                # Safety Stock, ROP, EOQ & target reduction engine
-├── models/                       # Model registry & serialized artifacts
-├── reports/                      # Quality audit reports & model comparison tables
-│   ├── quality/                  # Data quality JSON and Markdown reports
-│   └── tables/                   # Model comparison CSV and Markdown tables
-├── visualizations/               # Publication-grade EDA & forecasting figures
-├── tests/                        # 36 automated unit and integration tests
-├── app/                          # Web UI Command Center application
-├── config.yaml                   # Central project configuration file
-├── README.md                     # Master documentation
-├── PHASE_1_REPORT.md             # Official Phase 1 completion report
-└── PHASE_2_REPORT.md             # Official Phase 2 completion report
+│   ├── sample/               # Verified sample retail sales dataset
+│   │   └── sample_retail_sales_dataset.csv
+│   ├── raw/                  # Clean staging directory for runtime uploads
+│   └── processed/            # Clean directory for runtime features
+├── models/                   # Clean model registry storage
+│   └── registry.json
+├── scripts/                  # Operational Scripts
+│   ├── launcher.py           # Auto-launch server and browser
+│   ├── run_app.py            # Headless server launcher
+│   ├── run_pipeline.py       # Headless pipeline execution
+│   └── verify_hardening.py   # 9-point comprehensive hardening test suite
+├── tests/                    # 61 Automated Pytest Unit & Integration Tests
+├── .env.example              # Environment variables template
+├── .gitignore                # Git ignore rules
+├── config.yaml               # Root fallback configuration
+├── LICENSE                   # Open-source MIT license
+├── pyproject.toml            # Project packaging specification
+├── pytest.ini                # Pytest configuration
+├── requirements.txt          # Python dependencies
+└── run_retailmind.bat        # Windows one-click application launcher
 ```
 
 ---
 
-## 📊 Dataset Overview
+## 🛠️ Prerequisites & Requirements
 
-- **Source Dataset:** Global Superstore Retail Transaction Logs (`data/raw/superstore.csv`)
-- **Total Transactions Ingested:** 51,290 POS records across 4 years (2011–2014)
-- **Entities Covered:** 1,496 unique SKUs across 7 global market regions
-- **Data Quality Audit Result:** 0 duplicate rows, 0 invalid dates, 100% clean data ingestion pipeline.
-
----
-
-## 📈 Model Benchmarking Comparison Table
-
-Evaluated on $N = 2,007$ chronological holdout test windows:
-
-| Model | MAE (\$) | RMSE (\$) | WAPE | MAPE (%) | $R^2$ | Accuracy Pct (%) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Naive Baseline** | \$185.53 | \$406.66 | 0.8258 | 125.4% | -0.4510 | 17.42% |
-| **Moving Average ($W=14$)** | \$176.45 | \$345.12 | 0.7854 | 118.2% | -0.1250 | 21.46% |
-| **Seasonal Naive ($S=7$)** | \$185.53 | \$406.66 | 0.8258 | 125.4% | -0.4510 | 17.42% |
-| **Ridge Linear Regression** | \$176.99 | \$347.24 | 0.7878 | 119.1% | 0.0210 | 21.22% |
-| **Random Forest Regressor** | \$179.42 | \$356.64 | 0.7986 | 121.5% | 0.0150 | 20.14% |
-| **LightGBM Regressor (Selected Best)** | **\$170.98** | **\$345.08** | **0.7610** | **112.4%** | **0.0815** | **23.90%** |
+- **Operating System:** Windows 10/11, Linux, or macOS
+- **Python Version:** Python 3.10 or higher
+- **Browser:** Modern web browser (Chrome, Edge, Firefox, Brave)
 
 ---
 
-## 🔮 Multi-Horizon Forecasting Evaluation
+## 🚀 Installation & Setup
 
-| Forecast Horizon | MAE (\$) | WAPE | Accuracy Index (%) |
-| :--- | :---: | :---: | :---: |
-| **7-Day Horizon** | **\$152.43** | 0.8502 | 14.98% |
-| **14-Day Horizon** | **\$116.27** | 0.8286 | 17.14% |
-| **30-Day Horizon** | **\$79.38** | 0.8809 | 11.91% |
+1. **Clone or Navigate to the Repository:**
+   ```bash
+   cd c:\Users\HP\OneDrive\Desktop\vaidysis
+   ```
+
+2. **Create and Activate a Virtual Environment (Recommended):**
+   ```bash
+   python -m venv venv
+   # On Windows:
+   .\venv\Scripts\activate
+   # On Linux/macOS:
+   source venv/bin/activate
+   ```
+
+3. **Install Dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ---
 
-## 📦 Inventory Optimization Targets & Output
+## 💻 Running the Application
 
-- **Safety Stock ($SS$):** \$368.50 (derived via $Z_{0.95} \cdot \sigma_d \sqrt{L}$)
-- **Reorder Point ($ROP$):** \$1,941.20 (lead-time demand + SS)
-- **Economic Order Quantity ($EOQ$):** \$2,023.36 ($\sqrt{2DS/H}$)
-- **Vaidsys Target Stockout Reduction:** **15.0% Reduction**
-- **Vaidsys Target Overstock Reduction:** **10.0% Reduction**
+### Option 1: One-Click Launcher (Windows)
+Double-click `run_retailmind.bat` or run:
+```cmd
+run_retailmind.bat
+```
+*This automatically starts the backend server and opens `http://127.0.0.1:8000` in your default browser.*
 
----
-
-## ⚡ Quickstart Commands
-
+### Option 2: Python Launcher
 ```bash
-# 1. Run Automated Test Suite (36 Tests)
-python -m pytest tests/
-
-# 2. Execute End-to-End Pipeline
-python scripts/run_forecasting_pipeline.py
-
-# 3. Generate EDA & Phase 2 Visualizations
-python scripts/run_eda.py
-python scripts/generate_phase2_visualizations.py
+python scripts/launcher.py
 ```
+
+### Option 3: Manual Uvicorn Start
+```bash
+python scripts/run_app.py
+# Or directly:
+uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+```
+
+Open your browser at: **`http://127.0.0.1:8000`**
 
 ---
 
-## 📑 Official Reports
+## 📊 Using the Sample Dataset
 
-- **Phase 1 Completion Report:** [`PHASE_1_REPORT.md`](file:///c:/Users/HP/OneDrive/Desktop/vaidysis/PHASE_1_REPORT.md)
-- **Phase 2 Completion Report:** [`PHASE_2_REPORT.md`](file:///c:/Users/HP/OneDrive/Desktop/vaidysis/PHASE_2_REPORT.md)
-- **Data Quality Report:** [`reports/quality/quality_report.md`](file:///c:/Users/HP/OneDrive/Desktop/vaidysis/reports/quality/quality_report.md)
-- **Error Analysis Report:** [`reports/error_analysis.md`](file:///c:/Users/HP/OneDrive/Desktop/vaidysis/reports/error_analysis.md)
+RetailMind-X includes a verified 5,000-row sample retail sales dataset located at:
+```
+data/sample/sample_retail_sales_dataset.csv
+```
+
+### Step-by-Step Workflow:
+1. Launch the platform and open `http://127.0.0.1:8000`.
+2. In the **Upload Dataset** zone, upload `data/sample/sample_retail_sales_dataset.csv`.
+3. The real-time progress component displays transmission speed, uploaded bytes, and ETA.
+4. The system automatically profiles the schema and detects date and metric fields.
+5. Confirm column mappings and click **Run Intelligence Pipeline**.
+6. Explore interactive forecasts, inventory reorder recommendations, ABC matrix, scenario simulations, and export the comprehensive 30-section executive audit report.
+
+---
+
+## 🧪 Verification & Automated Testing
+
+### 1. Run Complete Pytest Suite (61 Tests)
+```bash
+python -m pytest tests/ -v
+```
+All 61 unit, integration, and security tests validate:
+- Session isolation & cross-dataset leak prevention
+- Chronological temporal train/val/test zero-lookahead split
+- Safety Stock, ROP, and EOQ mathematics
+- Dynamic schema mapping and metric detection
+- Fast API endpoint contracts and error handling
+
+### 2. Run Comprehensive Hardening Audit (9 Verification Points)
+```bash
+python scripts/verify_hardening.py
+```
+Validates:
+1. Multi-dataset session isolation
+2. Semantic target detection across heterogeneous schemas
+3. Inventory optimization formula correctness
+4. Forecast metrics & Vaidsys target compliance
+5. Zero-leakage temporal cross-validation
+6. 30-section report generation integrity
+7. Frontend state machine transitions
+
+---
+
+## 📑 API Endpoints Summary
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/health` | Service health status and runtime environment |
+| `GET` | `/api/v1/state` | Current dataset session state (`NO_DATASET`, `ANALYSIS_COMPLETE`, etc.) |
+| `POST` | `/api/v1/dataset/upload` | Multipart file upload with real-time profiling |
+| `POST` | `/api/v1/dataset/map_columns`| Set semantic column mappings |
+| `POST` | `/api/v1/dataset/process` | Trigger end-to-end forecasting & inventory pipeline |
+| `POST` | `/api/v1/dataset/clear` | Clear current dataset session and purge memory |
+| `GET` | `/api/v1/summary` | Executive summary metrics and inventory indicators |
+| `GET` | `/api/v1/forecast` | Multi-horizon time-series predictions (P10/P50/P90) |
+| `GET` | `/api/v1/inventory/recommendations` | SKU-level reorder flags, Safety Stock, and EOQ |
+| `POST` | `/api/v1/scenario/simulate` | Interactive what-if simulation (lead time, demand shift) |
+| `POST` | `/api/v1/assistant/chat` | Context-aware AI inventory assistant query |
+| `GET` | `/api/v1/reports/export` | Download complete audit report |
+
+Interactive Swagger documentation is available at: **`http://127.0.0.1:8000/docs`**
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

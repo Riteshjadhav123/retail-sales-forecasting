@@ -2,8 +2,8 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from api.routes import router as api_router
-from src.utils.logger import get_logger
+from app.api.routes import router as api_router
+from app.core.logging import get_logger
 
 logger = get_logger("fastapi_app")
 

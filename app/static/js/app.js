@@ -623,7 +623,7 @@ async function loadExecutiveDashboard() {
     const reorderReqCount = recs.filter(r => r.reorder_status === "REORDER_NOW").length;
     document.getElementById("kpi-reorder-count").innerText = reorderReqCount;
 
-    loadDashboardTrendChart();
+    loadDashboardTrendChart(30);
     loadTopProductsBarChart();
     renderABCParetoChart("dash-abc-chart");
     renderRiskRadarChart("dash-risk-chart");
@@ -635,11 +635,26 @@ async function loadExecutiveDashboard() {
   }
 }
 
-async function loadDashboardTrendChart() {
+function setDashboardTrendHorizon(days) {
+  const btn30 = document.getElementById("btn-trend-30d");
+  const btn90 = document.getElementById("btn-trend-90d");
+  if (btn30 && btn90) {
+    if (days === 90) {
+      btn90.classList.add("active");
+      btn30.classList.remove("active");
+    } else {
+      btn30.classList.add("active");
+      btn90.classList.remove("active");
+    }
+  }
+  loadDashboardTrendChart(days);
+}
+
+async function loadDashboardTrendChart(horizonDays = 30) {
   const chartEl = document.getElementById("dashboard-trend-chart");
   if (!chartEl) return;
   try {
-    const res = await fetch(`/api/v1/demand?horizon_days=30`);
+    const res = await fetch(`/api/v1/demand?horizon_days=${horizonDays}`);
     const data = await res.json();
 
     const traceHist = {
@@ -678,12 +693,12 @@ async function loadDashboardTrendChart() {
     };
 
     const layout = {
-      paper_bgcolor: '#111B2E',
-      plot_bgcolor: '#111B2E',
-      font: { color: '#F8FAFC' },
+      paper_bgcolor: 'rgba(15, 23, 42, 0)',
+      plot_bgcolor: 'rgba(15, 23, 42, 0)',
+      font: { color: '#F8FAFC', family: 'Inter, sans-serif' },
       margin: { t: 20, r: 20, l: 40, b: 35 },
-      xaxis: { gridcolor: '#1E293B' },
-      yaxis: { gridcolor: '#1E293B', title: 'Sales ($)' },
+      xaxis: { gridcolor: 'rgba(255, 255, 255, 0.06)' },
+      yaxis: { gridcolor: 'rgba(255, 255, 255, 0.06)', title: 'Sales ($)' },
       legend: { orientation: 'h', y: 1.15 }
     };
     Plotly.newPlot('dashboard-trend-chart', [traceHist, traceP10, traceP90, traceFc], layout, PLOTLY_DEFAULT_CONFIG);
@@ -1321,7 +1336,51 @@ async function loadCapabilityMatrix() {
   }
 }
 
-/* 2. AI Decision Center Loader */
+/* 1-Click Sample Dataset Loader */
+async function loadSampleDataset(sampleName) {
+  const dropzoneArea = document.getElementById("dropzone-area");
+  const idleContent = document.getElementById("dropzone-idle-content");
+  const uploadProgress = document.getElementById("hero-upload-progress");
+  
+  if (uploadProgress) {
+    uploadProgress.style.display = "block";
+    uploadProgress.innerHTML = `
+      <div style="padding:2rem 1.5rem; text-align:center;">
+        <div class="pulse-dot" style="margin:0 auto 1rem auto; width:14px; height:14px;"></div>
+        <div style="font-size:1.1rem; font-weight:700; color:var(--text-main); margin-bottom:0.4rem;">
+          Loading ${escapeHtml(sampleName)}...
+        </div>
+        <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+          Automating data quality audit, feature extraction, and ML quantile training.
+        </div>
+      </div>
+    `;
+  }
+  if (idleContent) idleContent.style.display = "none";
+
+  try {
+    const res = await fetch(`/api/v1/dataset/load_sample?sample_name=${encodeURIComponent(sampleName)}`, {
+      method: "POST"
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || "Failed to load sample dataset");
+    }
+    const data = await res.json();
+    await initAppStateCheck();
+  } catch (err) {
+    console.error("Error loading sample dataset:", err);
+    alert("Could not load sample dataset: " + err.message);
+    if (uploadProgress) uploadProgress.style.display = "none";
+    if (idleContent) idleContent.style.display = "block";
+  }
+}
+
+/* 2. AI Decision Center Loader with Interactive Filters */
+let ALL_DECISION_ACTIONS = [];
+let ACTIVE_DECISION_FILTER = "ALL";
+let SHOW_ALL_DECISION_ACTIONS = false;
+
 async function loadDecisionCenter() {
   const container = document.getElementById("decision-actions-container");
   if (!container) return;
@@ -1330,7 +1389,7 @@ async function loadDecisionCenter() {
     const res = await fetch("/api/v1/decision_center");
     const data = await res.json();
     const prios = data.priorities || {};
-    const actions = data.top_actions || [];
+    ALL_DECISION_ACTIONS = data.top_actions || [];
 
     const critEl = document.getElementById("prio-cnt-critical");
     const reordEl = document.getElementById("prio-cnt-reorders");
@@ -1344,33 +1403,84 @@ async function loadDecisionCenter() {
     if (overEl) overEl.innerText = prios.overstock_items || 0;
     if (healthEl) healthEl.innerText = prios.healthy_items || 0;
 
-    if (actions.length === 0) {
-      container.innerHTML = `
-        <div style="padding:1.5rem; text-align:center; color:var(--success-green); font-size:0.88rem;">
-          ✓ All inventory buffers are optimal. No immediate operational actions required today.
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = actions.map(act => {
-      const badgeClass = act.priority === "CRITICAL" ? "CRITICAL" : (act.priority === "HIGH" ? "HIGH" : "INFO");
-      return `
-        <div class="action-card ${act.priority}">
-          <div class="action-card-header">
-            <span class="action-card-title">${escapeHtml(act.title)}</span>
-            <span class="badge-status ${badgeClass}">${act.priority}</span>
-          </div>
-          <div class="action-detail-item"><strong>What:</strong>${escapeHtml(act.what)}</div>
-          <div class="action-detail-item"><strong>Why:</strong>${escapeHtml(act.why)}</div>
-          <div class="action-detail-item" style="color:var(--accent-cyan);"><strong>Action:</strong>${escapeHtml(act.action)}</div>
-          ${act.impact ? `<div class="action-detail-item" style="color:var(--text-subtle); font-size:0.75rem;"><strong>Impact:</strong>${escapeHtml(act.impact)}</div>` : ''}
-        </div>
-      `;
-    }).join("");
+    renderDecisionActionsList();
   } catch (err) {
     console.error("Error loading AI decision center:", err);
   }
+}
+
+function filterDecisionActions(filterType) {
+  ACTIVE_DECISION_FILTER = filterType;
+  
+  // Highlight active pill
+  document.querySelectorAll("#decision-prio-row .prio-badge").forEach(el => {
+    el.classList.remove("active-filter");
+  });
+  
+  renderDecisionActionsList();
+}
+
+function toggleDecisionActionsShowMore() {
+  SHOW_ALL_DECISION_ACTIONS = !SHOW_ALL_DECISION_ACTIONS;
+  renderDecisionActionsList();
+}
+
+function renderDecisionActionsList() {
+  const container = document.getElementById("decision-actions-container");
+  if (!container) return;
+
+  let filtered = ALL_DECISION_ACTIONS;
+  if (ACTIVE_DECISION_FILTER === "CRITICAL") {
+    filtered = ALL_DECISION_ACTIONS.filter(a => a.priority === "CRITICAL");
+  } else if (ACTIVE_DECISION_FILTER === "HIGH") {
+    filtered = ALL_DECISION_ACTIONS.filter(a => a.priority === "HIGH");
+  } else if (ACTIVE_DECISION_FILTER === "MEDIUM") {
+    filtered = ALL_DECISION_ACTIONS.filter(a => a.priority === "MEDIUM");
+  } else if (ACTIVE_DECISION_FILTER === "ANOMALY") {
+    filtered = ALL_DECISION_ACTIONS.filter(a => a.sku === "AGGREGATE" || (a.title && a.title.includes("Demand")));
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="padding:1.5rem; text-align:center; color:var(--success-green); font-size:0.88rem; grid-column:1/-1;">
+        ✓ No immediate actions required under the selected filter.
+      </div>
+    `;
+    return;
+  }
+
+  const displayList = SHOW_ALL_DECISION_ACTIONS ? filtered : filtered.slice(0, 3);
+
+  const cardsHtml = displayList.map(act => {
+    const badgeClass = act.priority === "CRITICAL" ? "CRITICAL" : (act.priority === "HIGH" ? "HIGH" : "INFO");
+    return `
+      <div class="action-card ${act.priority}">
+        <div class="action-card-header">
+          <span class="action-card-title">${escapeHtml(act.title)}</span>
+          <span class="badge-status ${badgeClass}">${act.priority}</span>
+        </div>
+        <div class="action-detail-item"><strong>What:</strong>${escapeHtml(act.what)}</div>
+        <div class="action-detail-item"><strong>Why:</strong>${escapeHtml(act.why)}</div>
+        <div class="action-detail-item" style="color:var(--accent-cyan);"><strong>Action:</strong>${escapeHtml(act.action)}</div>
+        ${act.impact ? `<div class="action-detail-item" style="color:var(--text-subtle); font-size:0.75rem;"><strong>Impact:</strong>${escapeHtml(act.impact)}</div>` : ''}
+      </div>
+    `;
+  }).join("");
+
+  const footerControls = `
+    <div style="grid-column: 1 / -1; display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+      ${filtered.length > 3 ? `
+        <button type="button" class="btn-header-upload" onclick="toggleDecisionActionsShowMore()" style="font-size:0.8rem; padding:0.45rem 1rem;">
+          ${SHOW_ALL_DECISION_ACTIONS ? '▲ Show Less' : `▼ Show All (${filtered.length}) Priorities`}
+        </button>
+      ` : '<div></div>'}
+      <button type="button" class="btn-header-upload" onclick="activateTab('page-inventory-intelligence')" style="font-size:0.8rem; padding:0.45rem 1rem; background:transparent; border-color:var(--accent-cyan);">
+        📦 Open Full Inventory Reorder Workbench →
+      </button>
+    </div>
+  `;
+
+  container.innerHTML = cardsHtml + footerControls;
 }
 
 /* 3. Inventory Cost Optimization Loader */

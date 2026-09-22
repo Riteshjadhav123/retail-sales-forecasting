@@ -1,0 +1,33 @@
+# RetailMind-X Global System Settings
+# Vaidsys Technologies Data Science Project 1
+
+app:
+  name: "RetailMind-X AI Command Center"
+  version: "2.0.0"
+  environment: "production"
+  host: "127.0.0.1"
+  port: 8000
+  debug: false
+
+paths:
+  raw_data: "data/raw/superstore.csv"
+  clean_data: "data/processed/clean_sales.parquet"
+  featured_data: "data/processed/featured_sales.parquet"
+  demand_recovered_data: "data/processed/demand_recovered.parquet"
+  experiment_log: "experiments/experiment_log.json"
+  database: "data/retailmind.db"
+  visualizations_dir: "visualizations"
+  reports_dir: "reports"
+  tables_dir: "reports/tables"
+  models_dir: "models"
+  logs_dir: "logs"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/retailmind.log"
+
+session:
+  default_scope: "STORE"
+  cache_enabled: true
+  max_memory_mb: 2048
