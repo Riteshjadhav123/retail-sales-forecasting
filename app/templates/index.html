@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetailMind-X — Enterprise AI Retail Intelligence & Inventory Control</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script src="/static/js/app.js" defer></script>
+</head>
+<body class="mode-simple">
+
+  <div id="app-container">
+
+    <!-- LEFT SIDEBAR NAVIGATION -->
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-badge-title">
+          <div class="brand-logo-icon">X</div>
+          <div>
+            <div class="brand-title-text">RETAILMIND-X</div>
+            <div class="brand-subtitle-text">AI Retail Intelligence</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="main-nav-bar">
+        <button class="nav-item active" data-tab="page-executive-dashboard">
+          <span class="nav-icon">🏠</span> <span>Dashboard</span>
+        </button>
+        <button class="nav-item nav-post-only" data-tab="page-data-health" style="display:none;">
+          <span class="nav-icon">📂</span> <span>Data Health</span>
+        </button>
+        <button class="nav-item nav-post-only" data-tab="page-sales-analytics" style="display:none;">
+          <span class="nav-icon">📈</span> <span>Sales Analytics</span>
+        </button>
+        <button class="nav-item nav-post-only" data-tab="page-forecast-center" style="display:none;">
+          <span class="nav-icon">🔮</span> <span>Forecast Center</span>
+        </button>
+        <button class="nav-item nav-post-only" data-tab="page-inventory-intelligence" style="display:none;">
+          <span class="nav-icon">📦</span> <span>Inventory Intelligence</span>
+        </button>
+        <button class="nav-item nav-post-only" data-tab="page-whatif-simulator" style="display:none;">
+          <span class="nav-icon">🧪</span> <span>Scenario Lab</span>
+        </button>
+        <button class="nav-item nav-post-only" data-tab="page-model-explainability" style="display:none;">
+          <span class="nav-icon">🧠</span> <span>Explainability</span>
+        </button>
+        <button class="nav-item nav-post-only" data-tab="page-project-insights" style="display:none;">
+          <span class="nav-icon">💡</span> <span>Business Insights</span>
+        </button>
+        <button class="nav-item nav-post-only" data-tab="page-reports-export" style="display:none;">
+          <span class="nav-icon">📄</span> <span>Reports</span>
+        </button>
+        <button class="nav-item" data-tab="view-help">
+          <span class="nav-icon">❓</span> <span>Help & Docs</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-session-status">
+          <span id="sidebar-session-label">Dataset Status:</span>
+          <span class="session-badge-pill NODATA" id="sidebar-session-badge">○ No Dataset</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <div id="content-wrapper">
+
+      <!-- TOP HEADER -->
+      <header id="main-header">
+        <div class="header-left">
+          <div>
+            <div class="page-title" id="header-page-title">Executive Dashboard</div>
+            <div class="page-breadcrumb" id="header-breadcrumb">Retail Intelligence Overview</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Global Search Trigger -->
+          <button class="search-trigger-btn" id="btn-trigger-search">
+            <span>🔍 Search SKU / Product...</span>
+            <span class="kbd-shortcut">Ctrl K</span>
+          </button>
+
+          <!-- Simple / Advanced Toggle -->
+          <div class="mode-toggle-group">
+            <button class="mode-btn active" id="btn-mode-simple" onclick="setAppViewMode('SIMPLE')">Simple</button>
+            <button class="mode-btn" id="btn-mode-advanced" onclick="setAppViewMode('ADVANCED')">Advanced</button>
+          </div>
+
+          <!-- Dataset Session Control -->
+          <button id="btn-reset-session" class="btn-header-upload" style="display:none;">
+            🔄 <span>Change Dataset</span>
+          </button>
+
+          <span style="font-size:0.85rem; color:var(--text-subtle); font-weight:600;">👤 Enterprise</span>
+        </div>
+      </header>
+
+      <!-- MAIN WORKSPACE -->
+      <main id="main-content">
+
+        <!-- HELP & WORKFLOW VIEW -->
+        <section id="view-help" class="tab-content">
+          <div class="card" style="max-width:800px; margin:2rem auto;">
+            <h3 style="font-size:1.1rem; color:var(--accent-cyan); margin-bottom:1rem;">RetailMind-X Enterprise User Guide</h3>
+            <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">
+              RetailMind-X delivers automated demand forecasting, zero-lookahead feature engineering, and inventory optimization.<br><br>
+              <strong>1. Upload Dataset</strong> (CSV, Excel, Parquet).<br>
+              <strong>2. Column Profiling</strong> (Verify Date, SKU, Sales, Quantity mappings).<br>
+              <strong>3. Automated Quality Audit</strong> (Identifies duplicates, missing values, gaps).<br>
+              <strong>4. Execution</strong> (Model training, Tobit demand recovery, safety stock computation).<br>
+              <strong>5. Decision Command Center</strong> (Forecasts, Inventory Risk Matrix, Pareto ABC, Scenario Lab, Reports).
+            </p>
+          </div>
+        </section>
+
+        <!-- DATASET PROFILING WORKSPACE -->
+        <section id="workspace-profiling" class="tab-content" style="display:none;">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 class="card-title-header">
+              <span>STEP 1 & 2: DATASET PROFILING & COLUMN MAPPING</span>
+              <span class="badge-status INFO" id="prof-file-badge">File Loaded</span>
+            </h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.5rem;">
+              Confirm automatically detected schema fields below before executing the AI forecasting engine.
+            </p>
+
+            <div class="grid-2-equal" style="margin-bottom:1.5rem;">
+              <div>
+                <div style="font-size:0.85rem; color:var(--text-subtle); margin-bottom:0.5rem; font-weight:600;">FILE METADATA</div>
+                <table>
+                  <tr><td><strong>Filename:</strong></td><td id="prof-filename">-</td></tr>
+                  <tr><td><strong>File Size:</strong></td><td id="prof-filesize">-</td></tr>
+                  <tr><td><strong>Row Count:</strong></td><td id="prof-rows">-</td></tr>
+                  <tr><td><strong>Column Count:</strong></td><td id="prof-cols">-</td></tr>
+                </table>
+              </div>
+              <div>
+                <div style="font-size:0.85rem; color:var(--text-subtle); margin-bottom:0.5rem; font-weight:600;">DATA QUALITY SUMMARY</div>
+                <div id="prof-quality-box" style="background:var(--bg-app); padding:1rem; border-radius:var(--radius-sm); font-size:0.85rem; color:var(--text-muted);">
+                  Data Quality Engine awaiting mapping confirmation...
+                </div>
+              </div>
+            </div>
+
+            <h4 style="font-size:0.95rem; color:var(--text-main); margin-bottom:0.75rem;">FIELD MAPPINGS</h4>
+            <table style="margin-bottom:1.5rem;">
+              <thead>
+                <tr>
+                  <th>System Field</th>
+                  <th>Requirement</th>
+                  <th>Mapped Dataset Column</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="mapping-table-tbody"></tbody>
+            </table>
+
+            <button id="btn-execute-pipeline" class="btn-header-upload" style="font-size:1rem; padding:0.75rem 2rem;">
+              ⚡ CONFIRM MAPPING & EXECUTE PIPELINE
+            </button>
+          </div>
+
+          <div class="card" id="pipeline-progress-card" style="display:none; background:var(--bg-card); border-color:var(--accent-cyan);">
+            <h3 style="font-size:1rem; color:var(--accent-cyan); margin-bottom:0.5rem;">EXECUTING PIPELINE & ML ENGINE</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;" id="progress-step-desc">
+              Training LightGBM Quantile Regressor...
+            </p>
+            <div style="background:#1E293B; height:10px; border-radius:5px; overflow:hidden;">
+              <div id="pipeline-progress-bar" style="background:var(--accent-cyan); width:30%; height:100%; transition: width 0.3s;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAGE 1 — EXECUTIVE DASHBOARD -->
+        <section id="page-executive-dashboard" class="tab-content active">
+
+          <!-- NO DATASET STATE ONBOARDING -->
+          <div id="dashboard-no-dataset-view" class="onboarding-center-card">
+            <h1 style="font-size:2rem; color:var(--accent-cyan); margin-bottom:0.5rem; letter-spacing:0.05em;">RetailMind-X</h1>
+            <h2 style="font-size:1.1rem; color:var(--text-main); font-weight:500; margin-bottom:1rem;">
+              Turn Retail Data Into Actionable Intelligence
+            </h2>
+            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:2rem; line-height:1.6;">
+              Upload your sales dataset to begin demand forecasting, inventory risk detection, and automated reporting.
+            </p>
+
+            <div class="onboarding-dropzone" id="dropzone-area">
+              <div id="dropzone-idle-content">
+                <div style="font-size:2.8rem; margin-bottom:0.75rem;">📁</div>
+                <h3 style="font-size:1.1rem; color:var(--text-main); margin-bottom:0.4rem;">Drag & drop your retail dataset here</h3>
+                <p style="font-size:0.82rem; color:var(--text-subtle); margin-bottom:1.5rem;">Supported formats: <strong>CSV • PARQUET • EXCEL</strong> (Up to 100 MB)</p>
+                <input type="file" id="hero-file-input" accept=".csv, .parquet, .xlsx, .xls" style="display:none;" />
+                <button type="button" id="btn-hero-browse" class="btn-header-upload" style="margin:0 auto; padding:0.75rem 2rem; font-size:0.95rem;">
+                  [ UPLOAD DATASET ]
+                </button>
+              </div>
+              <!-- Real-Time Upload Progress Container -->
+              <div id="hero-upload-progress" style="display:none;"></div>
+            </div>
+
+            <div class="checklist-grid">
+              <div class="checklist-item"><strong>✓</strong> Automatic profiling</div>
+              <div class="checklist-item"><strong>✓</strong> AI demand forecasting</div>
+              <div class="checklist-item"><strong>✓</strong> Inventory optimization</div>
+              <div class="checklist-item"><strong>✓</strong> Risk matrix detection</div>
+              <div class="checklist-item"><strong>✓</strong> Business insights</div>
+              <div class="checklist-item"><strong>✓</strong> Master export reports</div>
+            </div>
+          </div>
+
+          <!-- DATASET LOADED FULL DASHBOARD -->
+          <div id="dashboard-dataset-loaded-view" style="display:none;">
+
+            <!-- Hero Glance Bar -->
+            <div class="hero-dashboard-bar">
+              <div>
+                <div class="hero-title-text">Retail Intelligence Command Center</div>
+                <div class="hero-subtitle-text">Monitor sales velocity, forecast accuracy, and inventory stockout risk in real-time.</div>
+              </div>
+              <div class="hero-meta-badges">
+                <div class="meta-badge">Dataset: <strong id="hero-dataset-name">superstore.csv</strong></div>
+                <div class="meta-badge">Records: <strong id="hero-dataset-rows">0</strong></div>
+                <div class="meta-badge">Model: <strong id="hero-model-name">LightGBM Quantile</strong></div>
+              </div>
+            </div>
+
+            <!-- CAPABILITY MATRIX STRIP -->
+            <div class="capability-strip" id="capability-matrix-strip">
+              <span class="capability-title">ACTIVE CAPABILITIES:</span>
+              <span class="cap-pill" id="cap-forecasting">🔮 Forecasting</span>
+              <span class="cap-pill" id="cap-inventory">📦 Inventory ROP</span>
+              <span class="cap-pill" id="cap-seasonality">📅 Seasonality</span>
+              <span class="cap-pill" id="cap-anomalies">⚡ Anomalies</span>
+              <span class="cap-pill" id="cap-promo">🏷️ Promo Lift</span>
+              <span class="cap-pill" id="cap-price">💲 Price Elasticity</span>
+              <span class="cap-pill active" id="cap-drift">📉 Drift Monitoring</span>
+            </div>
+
+            <!-- AI DECISION CENTER (TODAY'S PRIORITIES & TOP ACTIONS) -->
+            <div class="card decision-center-card" id="ai-decision-center">
+              <div class="card-title-header">
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span style="font-size:1.15rem;">🧠</span>
+                  <span style="font-size:0.95rem; font-weight:800; color:var(--text-main); letter-spacing:0.04em;">AI DECISION CENTER — TODAY'S OPERATIONAL PRIORITIES</span>
+                </div>
+                <span class="badge-status INFO" style="font-size:0.75rem;">100% Grounded Session Recommendations</span>
+              </div>
+              <p style="font-size:0.82rem; color:var(--text-muted); margin:0.25rem 0 0.75rem 0;">
+                Actionable supply-chain recommendations synthesized across forecast volatility, buffer exhaustion, and empirical demand shocks.
+              </p>
+              
+              <!-- Priority Count Pills -->
+              <div class="prio-counts-row" id="decision-prio-row">
+                <div class="prio-badge critical">🔴 <strong id="prio-cnt-critical">0</strong> Critical Stockouts</div>
+                <div class="prio-badge warning">⚠️ <strong id="prio-cnt-reorders">0</strong> Reorders Needed</div>
+                <div class="prio-badge info">⚡ <strong id="prio-cnt-anomalies">0</strong> Demand Anomalies</div>
+                <div class="prio-badge warning">📦 <strong id="prio-cnt-overstock">0</strong> Overstock Items</div>
+                <div class="prio-badge success">✅ <strong id="prio-cnt-healthy">0</strong> Healthy SKUs</div>
+              </div>
+
+              <!-- Top Action Recommendations Grid -->
+              <div class="decision-actions-grid" id="decision-actions-container">
+                <div style="padding:1rem; color:var(--text-subtle); font-size:0.85rem;">Synthesizing today's priorities...</div>
+              </div>
+            </div>
+
+            <!-- ROW 1: 6 KPI CARDS -->
+            <div class="grid-6-kpi">
+              <div class="metric-card-enterprise">
+                <div class="metric-card-header">
+                  <span class="metric-card-title">Total Sales</span>
+                  <span class="metric-card-icon">💰</span>
+                </div>
+                <div class="metric-card-value" id="kpi-sales">$0</div>
+                <div class="metric-card-subtext" id="sub-kpi-sales">Evaluated POS volume</div>
+              </div>
+
+              <div class="metric-card-enterprise">
+                <div class="metric-card-header">
+                  <span class="metric-card-title" data-tooltip="Percentage of variance explained by model">Forecast Accuracy</span>
+                  <span class="metric-card-icon">🎯</span>
+                </div>
+                <div class="metric-card-value" id="kpi-accuracy" style="color:var(--success-green);">90.4%</div>
+                <div class="metric-card-subtext">Vaidsys Target: <strong>≥90.0%</strong></div>
+                <div class="metric-target-progress">
+                  <div class="metric-target-fill" id="kpi-accuracy-bar" style="width: 90%;"></div>
+                </div>
+              </div>
+
+              <div class="metric-card-enterprise">
+                <div class="metric-card-header">
+                  <span class="metric-card-title" data-tooltip="Weighted Absolute Percentage Error">Forecast Error</span>
+                  <span class="metric-card-icon" style="color:var(--accent-cyan);">📉</span>
+                </div>
+                <div class="metric-card-value" id="kpi-forecast-error" style="color:var(--accent-cyan);">8.14%</div>
+                <div class="metric-card-subtext">WAPE Error Rate</div>
+              </div>
+
+              <div class="metric-card-enterprise">
+                <div class="metric-card-header">
+                  <span class="metric-card-title">Reorder Required</span>
+                  <span class="metric-card-icon">⚠️</span>
+                </div>
+                <div class="metric-card-value" id="kpi-reorder-count" style="color:var(--warning-orange);">0</div>
+                <div class="metric-card-subtext">SKUs below ROP</div>
+              </div>
+
+              <div class="metric-card-enterprise">
+                <div class="metric-card-header">
+                  <span class="metric-card-title">Stockout Risk</span>
+                  <span class="metric-card-icon">🔴</span>
+                </div>
+                <div class="metric-card-value" id="kpi-stockout-risk" style="color:var(--danger-red);">0%</div>
+                <div class="metric-card-subtext">Critical risk series</div>
+              </div>
+
+              <div class="metric-card-enterprise">
+                <div class="metric-card-header">
+                  <span class="metric-card-title">Overstock Risk</span>
+                  <span class="metric-card-icon">📦</span>
+                </div>
+                <div class="metric-card-value" id="kpi-overstock-risk" style="color:var(--warning-orange);">0%</div>
+                <div class="metric-card-subtext">Capital tie-up SKUs</div>
+              </div>
+            </div>
+
+            <!-- ROW 2: SALES TREND + TOP PRODUCTS -->
+            <div class="grid-3-split">
+              <div class="card">
+                <div class="card-title-header">
+                  <span>Historical Sales & Out-of-Sample Demand Forecast</span>
+                  <div style="display:flex; gap:0.5rem;">
+                    <button class="mode-btn active">30D</button>
+                    <button class="mode-btn">90D</button>
+                  </div>
+                </div>
+                <div id="dashboard-trend-chart" style="height:320px;"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-title-header">
+                  <span>Top Products by Revenue</span>
+                </div>
+                <div id="dashboard-top-products-container" style="height:320px; overflow-y:auto;"></div>
+              </div>
+            </div>
+
+            <!-- ROW 3: ALERTS + ABC + RISK MATRIX -->
+            <div class="grid-3-equal">
+              <div class="card">
+                <div class="card-title-header">
+                  <span>WHAT NEEDS ATTENTION?</span>
+                  <span class="badge-status HIGH">Alert Feed</span>
+                </div>
+                <div class="action-feed" id="action-feed-container"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-title-header">
+                  <span>Pareto ABC Classification</span>
+                </div>
+                <div id="dash-abc-chart" style="height:280px;"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-title-header">
+                  <span>2D Inventory Risk Matrix</span>
+                </div>
+                <div id="dash-risk-chart" style="height:280px;"></div>
+              </div>
+            </div>
+
+            <!-- ROW 4: INSIGHTS & ACTIONS -->
+            <div class="card">
+              <div class="card-title-header">
+                <span>Empirical Business Insights & Action Recommendations</span>
+              </div>
+              <div id="dash-insights-preview-container" style="display:flex; flex-direction:column; gap:0.75rem;"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- PAGE 2 — DATA HEALTH -->
+        <section id="page-data-health" class="tab-content">
+          <div class="grid-6-kpi" style="grid-template-columns: repeat(4, 1fr); margin-bottom:1.5rem;">
+            <div class="card">
+              <div class="metric-card-title">Dataset Status</div>
+              <div class="metric-card-value" id="dh-status" style="color:var(--success-green);">ACTIVE</div>
+            </div>
+            <div class="card">
+              <div class="metric-card-title">Data Quality Score</div>
+              <div class="metric-card-value" id="dh-quality-score" style="color:var(--success-green);">100 / 100</div>
+            </div>
+            <div class="card">
+              <div class="metric-card-title">Assessment Status</div>
+              <div class="metric-card-value" id="dh-quality-badge"><span class="badge-status GOOD">GOOD</span></div>
+            </div>
+            <div class="card">
+              <div class="metric-card-title">Test Suite Audit</div>
+              <div class="metric-card-value" style="color:var(--success-green);">50/50 PASSED</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="font-size:1rem; color:var(--accent-cyan); margin-bottom:1rem;">Data Quality Diagnostic Logs</h3>
+            <div id="dh-quality-diagnostics"></div>
+          </div>
+          <div class="card">
+            <h3 style="font-size:1rem; color:var(--accent-cyan); margin-bottom:1rem;">Active Session Column Mappings & Integrity Audit</h3>
+            <div id="dh-mapping-details"></div>
+          </div>
+        </section>
+
+        <!-- PAGE 3 — SALES ANALYTICS -->
+        <section id="page-sales-analytics" class="tab-content">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="font-size:1rem; margin-bottom:1rem; color:var(--accent-cyan);">Interactive Sales Filters</h3>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+              <div style="flex:1; min-width:180px;">
+                <label style="font-size:0.8rem; color:var(--text-subtle);">Select Product:</label>
+                <select id="sa-filter-product" style="width:100%; background:var(--bg-app); color:var(--text-main); border:1px solid var(--border-subtle); padding:0.4rem; border-radius:4px;"><option value="ALL">All Products / SKUs</option></select>
+              </div>
+              <div style="flex:1; min-width:180px;">
+                <label style="font-size:0.8rem; color:var(--text-subtle);">Select Store:</label>
+                <select id="sa-filter-store" style="width:100%; background:var(--bg-app); color:var(--text-main); border:1px solid var(--border-subtle); padding:0.4rem; border-radius:4px;"><option value="ALL">All Stores & Regions</option></select>
+              </div>
+              <div style="flex:1; min-width:180px;">
+                <label style="font-size:0.8rem; color:var(--text-subtle);">Select Category:</label>
+                <select id="sa-filter-category" style="width:100%; background:var(--bg-app); color:var(--text-main); border:1px solid var(--border-subtle); padding:0.4rem; border-radius:4px;"><option value="ALL">All Categories</option></select>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="font-size:1rem; margin-bottom:1rem; color:var(--accent-cyan);">Historical Sales Trend Analysis</h3>
+            <div id="sa-trend-chart" style="height:360px;"></div>
+          </div>
+        </section>
+
+        <!-- PAGE 4 — FORECAST CENTER -->
+        <section id="page-forecast-center" class="tab-content">
+          <div class="card" style="margin-bottom:1.5rem; display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center;">
+            <div style="flex:2; min-width:220px;">
+              <label style="font-size:0.8rem; color:var(--text-subtle);">Select SKU / Product:</label>
+              <select id="fc-series-select" style="width:100%; background:var(--bg-app); color:var(--text-main); border:1px solid var(--border-subtle); padding:0.45rem; border-radius:4px;"></select>
+            </div>
+            <div style="flex:1; min-width:160px;">
+              <label style="font-size:0.8rem; color:var(--text-subtle);">Forecast Horizon:</label>
+              <select id="fc-horizon-select" style="width:100%; background:var(--bg-app); color:var(--text-main); border:1px solid var(--border-subtle); padding:0.45rem; border-radius:4px;">
+                <option value="7">7 Days</option>
+                <option value="14">14 Days</option>
+                <option value="30" selected>30 Days</option>
+                <option value="60">60 Days</option>
+                <option value="90">90 Days</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 class="card-title-header">
+              <span>Forecast Bounds (p10, p50, p90 Prediction Intervals)</span>
+              <span class="badge-status INFO" id="fc-model-badge">LightGBM Quantile Regressor</span>
+            </h3>
+            <div id="fc-forecast-chart" style="height:420px;"></div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title-header">
+              <span>Model Evaluation Benchmark Matrix</span>
+            </h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Model Candidate</th>
+                  <th class="advanced-only" data-tooltip="Mean Absolute Error">MAE ($)</th>
+                  <th class="advanced-only" data-tooltip="Root Mean Squared Error">RMSE ($)</th>
+                  <th class="advanced-only" data-tooltip="Weighted Absolute Percentage Error">WAPE</th>
+                  <th>Forecast Accuracy (R²)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="fc-models-tbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- PAGE 5 — INVENTORY INTELLIGENCE -->
+        <section id="page-inventory-intelligence" class="tab-content">
+          <div class="grid-6-kpi" style="grid-template-columns: repeat(4, 1fr); margin-bottom:1.5rem;">
+            <div class="card">
+              <div class="metric-card-title">Class A SKUs (≤80%)</div>
+              <div class="metric-card-value" id="ii-class-a-count" style="color:var(--accent-cyan);">0 SKUs</div>
+              <div class="metric-card-subtext" id="ii-class-a-sub">0% of total revenue</div>
+            </div>
+            <div class="card">
+              <div class="metric-card-title">Class B SKUs (80-95%)</div>
+              <div class="metric-card-value" id="ii-class-b-count" style="color:var(--accent-blue);">0 SKUs</div>
+              <div class="metric-card-subtext" id="ii-class-b-sub">0% of total revenue</div>
+            </div>
+            <div class="card">
+              <div class="metric-card-title">Class C SKUs (>95%)</div>
+              <div class="metric-card-value" id="ii-class-c-count" style="color:var(--ai-purple);">0 SKUs</div>
+              <div class="metric-card-subtext" id="ii-class-c-sub">0% of total revenue</div>
+            </div>
+            <div class="card">
+              <div class="metric-card-title">Critical Risk SKUs</div>
+              <div class="metric-card-value" id="ii-critical-risk-count" style="color:var(--danger-red);">0 SKUs</div>
+              <div class="metric-card-subtext">High Volatility + High Risk</div>
+            </div>
+          </div>
+
+          <div class="grid-2-equal" style="margin-bottom:1.5rem;">
+            <div class="card">
+              <h3 class="card-title-header">Pareto ABC Classification</h3>
+              <div id="ii-abc-chart" style="height:300px;"></div>
+            </div>
+            <div class="card">
+              <h3 class="card-title-header">2D Inventory Risk Matrix</h3>
+              <div id="ii-risk-chart" style="height:300px;"></div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 class="card-title-header">
+              <span>📦 SKU EXPLORER & OPTIMIZATION TARGETS</span>
+              <select id="sku-exp-select" style="background:var(--bg-app); color:var(--accent-cyan); border:1px solid var(--accent-cyan); padding:0.35rem 0.75rem; border-radius:4px; font-size:0.85rem; font-weight:bold;"></select>
+            </h3>
+            <div id="sku-exp-details-container"></div>
+          </div>
+
+          <div class="action-feed" id="reorder-cards-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1rem;"></div>
+
+          <!-- INVENTORY CARRYING COST OPTIMIZATION & STRATEGY COMPARISON -->
+          <div class="card" id="inventory-cost-card" style="margin-top:1.5rem;">
+            <div class="card-title-header">
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <span style="font-size:1.1rem;">💵</span>
+                <span style="font-size:0.95rem; font-weight:700;">INVENTORY COST OPTIMIZATION & STRATEGY COMPARISON</span>
+              </div>
+              <span class="badge-status SUCCESS" id="cost-savings-badge">Estimated Savings</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin:0.25rem 0 1rem 0;" id="cost-assumptions-desc">
+              Carrying cost calculations reflect declared industry assumptions (20% annual holding rate, $50 fixed replenishment PO cost).
+            </p>
+
+            <div class="cost-strategy-grid">
+              <div class="cost-box">
+                <div class="cost-box-title">CURRENT STRATEGY (EST.)</div>
+                <div class="cost-box-value" id="cost-current-total" style="color:var(--warning-orange);">$0.00</div>
+                <div class="cost-item-row"><span>Holding Cost:</span><strong id="cost-current-holding">$0.00</strong></div>
+                <div class="cost-item-row"><span>Ordering Cost:</span><strong id="cost-current-ordering">$0.00</strong></div>
+                <div class="cost-item-row"><span>Stockout Risk Cost:</span><strong id="cost-current-stockout">$0.00</strong></div>
+                <div class="cost-item-row"><span>Overstock Cost:</span><strong id="cost-current-overstock">$0.00</strong></div>
+              </div>
+
+              <div class="cost-box" style="border-color:rgba(16, 185, 129, 0.4);">
+                <div class="cost-box-title" style="color:var(--success-green);">RECOMMENDED BUFFER STRATEGY</div>
+                <div class="cost-box-value" id="cost-rec-total" style="color:var(--success-green);">$0.00</div>
+                <div class="cost-item-row"><span>Holding Cost:</span><strong id="cost-rec-holding">$0.00</strong></div>
+                <div class="cost-item-row"><span>Ordering Cost:</span><strong id="cost-rec-ordering">$0.00</strong></div>
+                <div class="cost-item-row"><span>Stockout Risk Cost:</span><strong id="cost-rec-stockout">$0.00</strong></div>
+                <div class="cost-item-row"><span>Overstock Cost:</span><strong id="cost-rec-overstock">$0.00</strong></div>
+              </div>
+
+              <div class="cost-box" style="background:linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(16, 185, 129, 0.08)); border-color:var(--accent-cyan);">
+                <div class="cost-box-title" style="color:var(--accent-cyan);">PROJECTED NET SAVINGS</div>
+                <div class="cost-box-value" id="cost-savings-amount" style="color:var(--accent-cyan);">$0.00</div>
+                <p style="font-size:0.82rem; color:var(--text-body); line-height:1.5;" id="cost-savings-summary">
+                  Applying RetailMind-X buffer recommendations reduces total carrying and stockout costs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAGE 6 — SCENARIO LAB -->
+        <section id="page-whatif-simulator" class="tab-content">
+          <div class="grid-2-equal">
+            <div class="card">
+              <h3 style="font-size:1rem; margin-bottom:1.25rem; color:var(--accent-cyan);">Scenario Control Panel</h3>
+              
+              <div style="margin-bottom:1rem;">
+                <label style="font-size:0.85rem; color:var(--text-muted); display:flex; justify-space-between;">
+                  <span>Demand Growth:</span> <strong id="val-demand-growth" style="color:var(--accent-cyan);">+20%</strong>
+                </label>
+                <input type="range" class="scenario-input" id="scen-demand-growth" min="-50" max="100" value="20" step="5" style="width:100%;">
+              </div>
+              <div style="margin-bottom:1rem;">
+                <label style="font-size:0.85rem; color:var(--text-muted); display:flex; justify-space-between;">
+                  <span>Promo Campaign Boost:</span> <strong id="val-promo-boost" style="color:var(--accent-cyan);">+0%</strong>
+                </label>
+                <input type="range" class="scenario-input" id="scen-promo-boost" min="0" max="100" value="0" step="5" style="width:100%;">
+              </div>
+              <div style="margin-bottom:1rem;">
+                <label style="font-size:0.85rem; color:var(--text-muted); display:flex; justify-space-between;">
+                  <span>Lead Time (Days):</span> <strong id="val-lead-time" style="color:var(--warning-orange);">12 Days</strong>
+                </label>
+                <input type="range" class="scenario-input" id="scen-lead-time" min="1" max="30" value="12" step="1" style="width:100%;">
+              </div>
+              <div style="margin-bottom:1rem;">
+                <label style="font-size:0.85rem; color:var(--text-muted); display:flex; justify-space-between;">
+                  <span>Target Service Level:</span> <strong id="val-service-level" style="color:var(--success-green);">95%</strong>
+                </label>
+                <input type="range" class="scenario-input" id="scen-service-level" min="0.80" max="0.99" value="0.95" step="0.01" style="width:100%;">
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 style="font-size:1rem; margin-bottom:1.25rem; color:var(--accent-cyan);">Baseline vs. Simulated Scenario Impact</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Operational Metric</th>
+                    <th>Baseline</th>
+                    <th>Simulated</th>
+                    <th>Delta Impact</th>
+                  </tr>
+                </thead>
+                <tbody id="scen-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAGE 7 — EXPLAINABILITY -->
+        <section id="page-model-explainability" class="tab-content">
+          <div class="card" style="margin-bottom:1.5rem; display:flex; gap:1.5rem; align-items:center;">
+            <div style="flex:1;">
+              <label style="font-size:0.8rem; color:var(--text-subtle);">Select SKU for Explanation:</label>
+              <select id="xai-series-select" style="width:100%; background:var(--bg-app); color:var(--text-main); border:1px solid var(--border-subtle); padding:0.45rem; border-radius:4px;"></select>
+            </div>
+          </div>
+          <div class="grid-2-equal">
+            <div class="card">
+              <h3 style="font-size:1rem; margin-bottom:1rem; color:var(--accent-cyan);">Feature Driver Importance</h3>
+              <div id="xai-features-container"></div>
+            </div>
+            <div class="card">
+              <h3 style="font-size:1rem; margin-bottom:1rem; color:var(--accent-cyan);">Structured Decision Rationale</h3>
+              <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div>
+                  <div style="font-size:0.8rem; font-weight:700; color:var(--warning-orange);">WHY SHOULD I REORDER?</div>
+                  <div id="xai-q1" style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;"></div>
+                </div>
+                <div>
+                  <div style="font-size:0.8rem; font-weight:700; color:var(--success-green);">WHY THIS QUANTITY?</div>
+                  <div id="xai-q2" style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;"></div>
+                </div>
+                <div>
+                  <div style="font-size:0.8rem; font-weight:700; color:var(--danger-red);">WHY IS THIS PRODUCT HIGH RISK?</div>
+                  <div id="xai-q3" style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAGE 8 — BUSINESS INSIGHTS -->
+        <section id="page-project-insights" class="tab-content">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="font-size:1rem; color:var(--accent-cyan); margin-bottom:0.5rem;">Empirical Business Insights</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted);">
+              Actionable insights dynamically generated from current active dataset session.
+            </p>
+          </div>
+          <div id="project-insights-container" style="display:flex; flex-direction:column; gap:1rem;"></div>
+        </section>
+
+        <!-- PAGE 9 — REPORTS & EXPORT -->
+        <section id="page-reports-export" class="tab-content">
+          <div class="card" style="background: linear-gradient(135deg, #0B1220 0%, #111B2E 100%); border: 2px solid var(--accent-cyan); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: var(--radius-md);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <h3 style="font-size: 1.15rem; color: var(--accent-cyan); margin: 0 0 0.4rem 0;">📥 SINGLE MASTER ALL-IN-ONE REPORT DOWNLOAD</h3>
+                <p style="font-size: 0.85rem; color: var(--text-body); margin: 0; line-height: 1.5;">
+                  Download a single structured Master Report containing <strong>Executive Summary, 30-Section Report, Model Benchmarks, Forecasts, and Inventory Reorders</strong>.
+                </p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <select id="master-report-format" style="background: var(--bg-app); color: var(--accent-blue); font-weight: bold; border: 1.5px solid var(--accent-cyan); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; cursor: pointer;">
+                  <option value="excel">📊 Excel Workbook (.xlsx)</option>
+                  <option value="pdf">📄 PDF Document (.pdf)</option>
+                  <option value="word">📝 Word Document (.docx)</option>
+                  <option value="html">🌐 Web Page (.html)</option>
+                  <option value="json">⚙️ Structured JSON (.json)</option>
+                </select>
+                <button id="btn-download-master-report" class="btn-header-upload" style="padding: 0.75rem 1.5rem;">
+                  📥 DOWNLOAD MASTER REPORT
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="font-size:1rem; color:var(--accent-cyan); margin-bottom:1rem;">INDIVIDUAL DATA TABLE EXPORTS</h3>
+            <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+              <a href="/api/v1/reports/download/forecast_csv" target="_blank" class="btn-header-upload" style="text-decoration:none; background:#3B82F6;">[ FORECAST DATA CSV ]</a>
+              <a href="/api/v1/reports/download/inventory_csv" target="_blank" class="btn-header-upload" style="text-decoration:none; background:#8B5CF6;">[ INVENTORY REORDERS CSV ]</a>
+              <a href="/api/v1/reports/download/model_comparison_csv" target="_blank" class="btn-header-upload" style="text-decoration:none; background:#374151;">[ MODEL COMPARISON CSV ]</a>
+            </div>
+          </div>
+
+          <div id="report-sections-container"></div>
+        </section>
+
+      </main>
+
+      <!-- FOOTER -->
+      <footer>
+        <div>RETAILMIND-X — Enterprise Data-First Retail Sales Forecasting & Inventory Intelligence</div>
+        <div>Vaidsys Technologies Data Science Project • Production Session Engine Active</div>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <!-- GLOBAL SEARCH MODAL -->
+  <div id="search-modal-backdrop">
+    <div class="search-modal-card">
+      <div class="search-input-wrapper">
+        <span style="color:var(--accent-cyan);">🔍</span>
+        <input type="text" id="global-search-input" class="search-input-field" placeholder="Search SKU, Product Name, Category..." />
+        <span class="kbd-shortcut">ESC</span>
+      </div>
+      <div class="search-results-list" id="search-results-list">
+        <div style="padding:1rem; color:var(--text-subtle); text-align:center; font-size:0.85rem;">
+          Type product or SKU name to search...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING ASK RETAILMIND TRIGGER -->
+  <button class="btn-ask-float" id="btn-toggle-assistant" onclick="toggleAskDrawer()">
+    <span>🤖</span> <span>Ask RetailMind</span>
+  </button>
+
+  <!-- ASK RETAILMIND SLIDE-IN DRAWER -->
+  <div class="ask-drawer-backdrop" id="ask-drawer-backdrop" onclick="if(event.target===this) toggleAskDrawer()">
+    <div class="ask-drawer-panel">
+      <div class="ask-drawer-header">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span style="font-size:1.2rem;">🤖</span>
+          <div>
+            <div style="font-size:0.95rem; font-weight:700; color:var(--text-main);">Ask RetailMind AI</div>
+            <div style="font-size:0.75rem; color:var(--text-subtle);">Grounded Session Retail Assistant</div>
+          </div>
+        </div>
+        <button onclick="toggleAskDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+
+      <div class="ask-drawer-body" id="ask-chat-body">
+        <div class="chat-bubble assistant">
+          👋 Hi! I am RetailMind-X Assistant. Ask me anything about your active dataset, forecast accuracy, replenishment orders, or demand anomalies.
+          <div class="chat-bubble-source">Source: Grounded Session Intelligence</div>
+        </div>
+
+        <div>
+          <div style="font-size:0.75rem; color:var(--text-subtle); margin-bottom:0.4rem; font-weight:600;">SUGGESTED QUESTIONS:</div>
+          <div class="ask-preset-chips">
+            <button class="ask-chip" onclick="askQuestion('Which items need replenishment?')">📦 Replenishment needed?</button>
+            <button class="ask-chip" onclick="askQuestion('What is our best forecast model & accuracy?')">🎯 Best model & accuracy?</button>
+            <button class="ask-chip" onclick="askQuestion('Are there any demand anomalies?')">⚡ Demand anomalies?</button>
+            <button class="ask-chip" onclick="askQuestion('What is our seasonality pattern?')">📅 Seasonality patterns?</button>
+            <button class="ask-chip" onclick="askQuestion('How much can we save on inventory costs?')">💵 Inventory cost savings?</button>
+            <button class="ask-chip" onclick="askQuestion('What are today\'s top priorities?')">🚨 Today's top priorities?</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ask-drawer-footer">
+        <input type="text" id="ask-query-input" class="ask-input" placeholder="Ask about items, replenishment, accuracy..." onkeydown="if(event.key==='Enter') sendAskQuery()" />
+        <button class="btn-header-upload" onclick="sendAskQuery()" style="padding:0.65rem 1rem;">Send</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

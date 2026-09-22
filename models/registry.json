@@ -1,0 +1,186 @@
+{
+  "models": [
+    {
+      "model_id": "LightGBM_FE_v1.0_20260909_045214",
+      "model_name": "LightGBM_FE",
+      "version": "1.0",
+      "timestamp": "2026-09-20T04:52:14.451617",
+      "dataset_version": "v1.0",
+      "features": [
+        "day",
+        "day_of_week",
+        "week",
+        "month",
+        "quarter",
+        "year",
+        "is_weekend",
+        "sin_month",
+        "cos_month",
+        "sin_day_of_week",
+        "cos_day_of_week",
+        "lag_1",
+        "lag_7",
+        "lag_14",
+        "lag_28",
+        "rolling_mean_7",
+        "rolling_mean_14",
+        "rolling_mean_28",
+        "rolling_std_7",
+        "rolling_std_28",
+        "short_term_trend",
+        "medium_term_trend",
+        "demand_volatility"
+      ],
+      "hyperparameters": {
+        "n_estimators": 100
+      },
+      "metrics": {
+        "MAE": 372.5870298760048,
+        "RMSE": 701.376512418355,
+        "WAPE": 1.1029464349393563,
+        "MAPE": 1159929456.2222435,
+        "R2": 0.10383668681426761,
+        "Scenario": "2. Baseline + Feature Engineering"
+      },
+      "artifact_path": "models\\LightGBM_FE_v1.0_20260909_045214.joblib"
+    },
+    {
+      "model_id": "LightGBM_FE_v1.0_20260909_045356",
+      "model_name": "LightGBM_FE",
+      "version": "1.0",
+      "timestamp": "2026-09-20T04:53:56.524682",
+      "dataset_version": "v1.0",
+      "features": [
+        "day",
+        "day_of_week",
+        "week",
+        "month",
+        "quarter",
+        "year",
+        "is_weekend",
+        "sin_month",
+        "cos_month",
+        "sin_day_of_week",
+        "cos_day_of_week",
+        "lag_1",
+        "lag_7",
+        "lag_14",
+        "lag_28",
+        "rolling_mean_7",
+        "rolling_mean_14",
+        "rolling_mean_28",
+        "rolling_std_7",
+        "rolling_std_28",
+        "short_term_trend",
+        "medium_term_trend",
+        "demand_volatility"
+      ],
+      "hyperparameters": {
+        "n_estimators": 100
+      },
+      "metrics": {
+        "MAE": 372.5870298760048,
+        "RMSE": 701.376512418355,
+        "WAPE": 1.1029464349393563,
+        "MAPE": 1159929456.2222435,
+        "R2": 0.10383668681426761,
+        "Scenario": "2. Baseline + Feature Engineering"
+      },
+      "artifact_path": "models\\LightGBM_FE_v1.0_20260909_045356.joblib"
+    },
+    {
+      "model_id": "LightGBM_FE_v1.0_20260909_045429",
+      "model_name": "LightGBM_FE",
+      "version": "1.0",
+      "timestamp": "2026-09-20T04:54:29.953064",
+      "dataset_version": "v1.0",
+      "features": [
+        "day",
+        "day_of_week",
+        "week",
+        "month",
+        "quarter",
+        "year",
+        "is_weekend",
+        "sin_month",
+        "cos_month",
+        "sin_day_of_week",
+        "cos_day_of_week",
+        "lag_1",
+        "lag_7",
+        "lag_14",
+        "lag_28",
+        "rolling_mean_7",
+        "rolling_mean_14",
+        "rolling_mean_28",
+        "rolling_std_7",
+        "rolling_std_28",
+        "short_term_trend",
+        "medium_term_trend",
+        "demand_volatility"
+      ],
+      "hyperparameters": {
+        "n_estimators": 100
+      },
+      "metrics": {
+        "MAE": 372.5870298760048,
+        "RMSE": 701.376512418355,
+        "WAPE": 1.1029464349393563,
+        "MAPE": 1159929456.2222435,
+        "R2": 0.10383668681426761,
+        "Scenario": "2. Baseline + Feature Engineering"
+      },
+      "artifact_path": "models\\LightGBM_FE_v1.0_20260909_045429.joblib"
+    },
+    {
+      "model_id": "Full_RetailMindX_v1.0_20260909_045437",
+      "model_name": "Full_RetailMindX",
+      "version": "1.0",
+      "timestamp": "2026-09-20T04:54:37.106688",
+      "dataset_version": "v1.0",
+      "features": [
+        "day",
+        "day_of_week",
+        "week",
+        "month",
+        "quarter",
+        "year",
+        "is_weekend",
+        "sin_month",
+        "cos_month",
+        "sin_day_of_week",
+        "cos_day_of_week",
+        "lag_1",
+        "lag_7",
+        "lag_14",
+        "lag_28",
+        "rolling_mean_7",
+        "rolling_mean_14",
+        "rolling_mean_28",
+        "rolling_std_7",
+        "rolling_std_28",
+        "short_term_trend",
+        "medium_term_trend",
+        "demand_volatility"
+      ],
+      "hyperparameters": {
+        "quantiles": [
+          0.1,
+          0.5,
+          0.9
+        ]
+      },
+      "metrics": {
+        "MAE": 399.1220109012358,
+        "RMSE": 740.7835599448688,
+        "WAPE": 1.1814963048387506,
+        "MAPE": 1234797976.490452,
+        "R2": 0.0003052861145712571,
+        "Coverage_Pct": 53.12354312354313,
+        "Mean_Interval_Width": 817.2042564168876,
+        "Scenario": "5. Full RetailMind-X (Uncertainty-Aware)"
+      },
+      "artifact_path": "models\\Full_RetailMindX_v1.0_20260909_045437.joblib"
+    }
+  ]
+}

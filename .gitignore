@@ -1,0 +1,33 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Data & Models (ignore large raw files/artifacts if needed, keep structure)
+data/raw/*.csv
+data/processed/*.parquet
+models/*.pkl
+models/*.pt
+models/*.joblib
+experiments/*.json
+
+# Logs & Cache
+logs/*.log
+.pytest_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Build & Packaging Artifacts
+dist/
+build/
+*.spec
+*.exe
+
+# System
+.DS_Store
+Thumbs.db
+.env

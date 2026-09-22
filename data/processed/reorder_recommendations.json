@@ -1,0 +1,17 @@
+[
+  {
+    "series_id":"DEFAULT_SERIES",
+    "current_stock":700.0,
+    "avg_daily_demand":140.0,
+    "safety_stock":68.81,
+    "reorder_point":1048.81,
+    "economic_order_quantity":493.29,
+    "recommended_order_quantity":842.1,
+    "reorder_status":"REORDER_NOW",
+    "composite_risk_score":16.02,
+    "risk_category":"LOW",
+    "stockout_risk":33.26,
+    "overstock_risk":0.0,
+    "reasoning":"Current stock (700.0) is at or below Reorder Point (1048.8). Order 842.1 units immediately to maintain 95% service level."
+  }
+]

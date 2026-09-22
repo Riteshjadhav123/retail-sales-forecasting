@@ -1,0 +1,6 @@
+series_id,scenario,horizon_days,lead_time_days,total_demand_units,total_sales_units,fill_rate_pct,stockout_days,average_inventory_units,holding_cost_dollar,reorder_point,eoq
+Central_Furniture,NORMAL,90,7,66484.68,61336.87,92.26,5,4312.59,7975.34,9036.16,1896.07
+Central_Furniture,DEMAND_SPIKE,90,7,99727.01,91529.75,91.78,7,5923.14,10953.75,13554.25,2322.21
+Central_Furniture,SUPPLIER_DELAY,90,14,66484.68,52571.95,79.07,14,5622.87,10398.46,15671.42,1896.07
+Central_Furniture,PROMOTION_CAMPAIGN,90,7,93078.55,84352.53,90.63,6,6001.4,9433.71,12650.63,2433.38
+Central_Furniture,INVENTORY_SHORTAGE,90,7,66484.68,61236.87,92.11,5,4310.37,7971.23,9036.16,1896.07

@@ -1,0 +1,47 @@
+{
+  "total_records": 51290,
+  "total_columns": 24,
+  "duplicate_records": 0,
+  "missing_values": {
+    "Row ID": 0,
+    "Order ID": 0,
+    "Order Date": 0,
+    "Ship Date": 0,
+    "Ship Mode": 0,
+    "Customer ID": 0,
+    "Customer Name": 0,
+    "Segment": 0,
+    "City": 0,
+    "State": 0,
+    "Country": 0,
+    "Postal Code": 41296,
+    "Market": 0,
+    "Region": 0,
+    "Product ID": 0,
+    "Category": 0,
+    "Sub-Category": 0,
+    "Product Name": 0,
+    "Sales": 0,
+    "Quantity": 0,
+    "Discount": 0,
+    "Profit": 0,
+    "Shipping Cost": 0,
+    "Order Priority": 0
+  },
+  "invalid_dates": 31223,
+  "date_range": {
+    "start": "2011-01-01",
+    "end": "2014-12-12"
+  },
+  "anomalies": {
+    "negative_sales": 0,
+    "zero_sales": 0,
+    "negative_quantity": 0
+  },
+  "entities": {
+    "unique_skus": 10292,
+    "unique_categories": 3,
+    "unique_markets": 7
+  },
+  "quality_status": "WARNINGS_FOUND"
+}

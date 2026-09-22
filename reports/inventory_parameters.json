@@ -1,0 +1,15 @@
+{
+  "service_level_pct": 95.0,
+  "forecast_daily_demand": 230.78,
+  "demand_std_dev": 195.03,
+  "lead_time_demand": 1615.45,
+  "safety_stock": 929.77,
+  "reorder_point": 2545.22,
+  "economic_order_quantity": 2052.24,
+  "stockout_risk_pct": 5.0,
+  "overstock_risk_pct": 36.53,
+  "vaidsys_target_reductions": {
+    "projected_stockout_reduction_pct": 15.0,
+    "projected_overstock_reduction_pct": 10.0
+  }
+}

@@ -1,0 +1,48 @@
+# Retail Sales Forecasting Configuration File
+# Vaidsys Technologies Data Science Project 1
+
+project:
+  name: "Retail Sales Forecasting"
+  organization: "Vaidsys Technologies"
+  version: "2.0.0"
+
+paths:
+  raw_data: "data/raw/superstore.csv"
+  clean_data: "data/processed/clean_sales.parquet"
+  featured_data: "data/processed/featured_sales.parquet"
+  demand_recovered_data: "data/processed/demand_recovered.parquet"
+  experiment_log: "experiments/experiment_log.json"
+  database: "data/retailmind.db"
+  visualizations_dir: "visualizations"
+  reports_dir: "reports"
+  tables_dir: "reports/tables"
+  models_dir: "models"
+
+data:
+  date_col: "Order Date"
+  target_col: "Sales"
+  quantity_col: "Quantity"
+  price_col: "Sales"
+  discount_col: "Discount"
+  profit_col: "Profit"
+  series_id_col: "series_id"
+  category_col: "Category"
+  sub_category_col: "Sub-Category"
+  market_col: "Market"
+  
+forecasting:
+  horizons: [7, 14, 30]
+  quantiles: [0.10, 0.50, 0.90]
+  random_state: 42
+  validation_split:
+    train_ratio: 0.80
+    val_ratio: 0.10
+    test_ratio: 0.10
+
+inventory:
+  service_level: 0.95
+  lead_time_days: 7
+  holding_cost_per_unit_year: 2.00
+  ordering_cost_fixed: 50.00
+  stockout_target_reduction_pct: 15.0
+  overstock_target_reduction_pct: 10.0
