@@ -16,9 +16,10 @@ def main():
     logger.info("==================================================")
     logger.info(f"Server listening at: http://{host}:{port}")
     
-    is_dev = os.environ.get("ENVIRONMENT", "development").lower() != "production"
-    uvicorn.run("app.main:app", host=host, port=port, reload=is_dev)
+    reload_flag = os.environ.get("RELOAD", "false").lower() in ("true", "1") or os.environ.get("ENVIRONMENT", "").lower() == "development"
+    uvicorn.run("app.main:app", host=host, port=port, reload=reload_flag)
 
 if __name__ == "__main__":
     main()
+
 

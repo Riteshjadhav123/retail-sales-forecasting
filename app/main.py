@@ -21,6 +21,11 @@ static_dir = os.path.join(os.path.dirname(__file__), "static")
 os.makedirs(static_dir, exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+@app.get("/health")
+def health_check():
+    """Simple lightweight health check endpoint for cloud platform port verification."""
+    return {"status": "ok"}
+
 @app.get("/", response_class=HTMLResponse)
 def read_root():
     """Serves RetailMind-X AI Command Center Web Interface."""
@@ -34,6 +39,7 @@ if __name__ == "__main__":
     import uvicorn
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", "8000"))
-    is_dev = os.environ.get("ENVIRONMENT", "development").lower() != "production"
-    uvicorn.run("app.main:app", host=host, port=port, reload=is_dev)
+    reload_flag = os.environ.get("RELOAD", "false").lower() in ("true", "1") or os.environ.get("ENVIRONMENT", "").lower() == "development"
+    uvicorn.run("app.main:app", host=host, port=port, reload=reload_flag)
+
 
