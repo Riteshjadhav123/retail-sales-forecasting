@@ -17,7 +17,7 @@
 RetailMind-X is an enterprise-grade time-series forecasting and inventory optimization platform engineered for retail operations. Designed around a strict **Data-First architecture**, the platform contains zero hardcoded datasets. It initializes in a clean `NO_DATASET` state, automatically profiles any uploaded retail transaction dataset, constructs leak-free temporal features, trains competitive baseline and machine learning forecasting models (Ridge, Random Forest, LightGBM Quantile Regressors), and generates actionable inventory optimization strategies (Safety Stock, Reorder Point, EOQ, ABC stratification, and stockout/overstock mitigation).
 
 ### Key Objectives & Achievements
-- **Adaptive Ingestion:** Automatic semantic column mapping (Order Date, Sales/Revenue, Quantity, SKU/Category).
+- **Adaptive Ingestion:** Automatic semantic column mapping (Order Date, Sales/Revenue, Quantity, SKU/Category)..
 - **Leak-Free Forecasting:** Strict chronological time-series splitting with expanding-window rolling and lag feature engineering.
 - **Probabilistic Horizons:** Forecasts across 7, 14, and 30-day horizons with P10/P50/P90 prediction intervals.
 - **Inventory Optimization:** Multi-echelon inventory control targeting **>=15% stockout reduction** and **>=10% overstock reduction**.
