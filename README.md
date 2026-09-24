@@ -138,7 +138,7 @@ data/sample/sample_retail_sales_dataset.csv
 3. The real-time progress component displays transmission speed, uploaded bytes, and ETA.
 4. The system automatically profiles the schema and detects date and metric fields.
 5. Confirm column mappings and click **Run Intelligence Pipeline**.
-6. Explore interactive forecasts, inventory reorder recommendations, ABC matrix, scenario simulations, and export the comprehensive 30-section executive audit report.
+6. Explore interactive forecasts, inventory reorder recommendations, ABC matrix, scenario simulations, and export the comprehensive 30-section executive audit report .
 
 ---
 
